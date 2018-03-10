@@ -58,6 +58,11 @@ tf.app.flags.DEFINE_string('pretrained_model_checkpoint_path', '',
                            """before beginning any training.""")
 tf.app.flags.DEFINE_string('optimizer', 'momentum',
                           """The optimizer of SGD (momentum, adam, gd, rmsprop).""")
+
+tf.app.flags.DEFINE_integer('epoch_to_change', -1,
+                            """time to change compression""")
+
+
 # **IMPORTANT**
 # Please note that this learning rate schedule is heavily dependent on the
 # hardware architecture, batch size and any changes to the model architecture
