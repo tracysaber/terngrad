@@ -424,8 +424,10 @@ def train(dataset):
 
     # added by tracysaber
     epoch_num = ( (global_step / num_nodes) * FLAGS.batch_size) / dataset.num_examples_per_epoch()
-    if tf.to_int32(tf.floor(epoch_num))> tf.to_int32(FLAGS.epoch_to_change):
-        tower_grads = tower_floating_grads
+    cond_op2 = tf.less(tf.to_int32(FLAGS.epoch_to_change),tf.to_int32(tf.floor(epoch_num)))
+    tower_grads = tf.cond(cond_op2,tower_floating_grads,tower_grads)
+
+
     # We must calculate the mean of each gradient. Note that this is the
     # synchronization point across all towers @ CPU.
     if len(tower_grads)>1:
