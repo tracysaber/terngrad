@@ -422,7 +422,10 @@ def train(dataset):
                                   lambda: tower_grads[i][j][0]) )
           tower_grads[i] = list(zip(selected_gradients, selected_variables))
 
-
+    # added by tracysaber
+    epoch_num = ( (global_step / num_nodes) * FLAGS.batch_size) / dataset.num_examples_per_epoch()
+    if(epoch_num>FLAGS.epoch_to_change):
+        tower_grads = tower_floating_grads
     # We must calculate the mean of each gradient. Note that this is the
     # synchronization point across all towers @ CPU.
     if len(tower_grads)>1:
