@@ -423,9 +423,9 @@ def train(dataset):
           tower_grads[i] = list(zip(selected_gradients, selected_variables))
 
     # added by tracysaber
-    epoch_num = ( (global_step / num_nodes) * FLAGS.batch_size) / dataset.num_examples_per_epoch()
-    cond_op2 = tf.less(tf.to_int32(FLAGS.epoch_to_change),tf.to_int32(tf.floor(epoch_num)))
-    tower_grads = tf.cond(cond_op2,tower_floating_grads,tower_grads)
+    # epoch_num = ( (global_step / num_nodes) * FLAGS.batch_size) / dataset.num_examples_per_epoch()
+    # cond_op2 = tf.less(tf.to_int32(FLAGS.epoch_to_change),tf.to_int32(tf.floor(epoch_num)))
+    # tower_grads = tf.cond(cond_op2,tower_floating_grads,tower_grads)
 
 
     # We must calculate the mean of each gradient. Note that this is the
@@ -438,8 +438,8 @@ def train(dataset):
     tf.summary.scalar('learning_rate', lr)
 
     # Add histograms for gradients.
-    # for grads in tower_grads:
-    #   _gradient_summary(grads, 'final')
+    for grads in tower_grads:
+      _gradient_summary(grads, 'final')
 
     # Apply the gradients to adjust the shared variables.
     # @ GPUs
