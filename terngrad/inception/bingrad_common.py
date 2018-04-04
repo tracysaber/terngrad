@@ -180,7 +180,7 @@ def gradient_binarizing_scalers(grads_and_vars, clip_factor):
         if(clip_factor > 1.0e-5):
             mean_gradient = tf.reduce_mean(gradient)
             stddev_gradient = tf.sqrt(tf.reduce_mean(tf.square(gradient - mean_gradient)))
-            print("------ stddev"+stddev_gradient+"\n")
+            print("mean_gradient",mean_gradient,"------ stddev",stddev_gradient,"\n")
             scalers.append(clip_factor * stddev_gradient)
         else:
             scalers.append(tf.reduce_max(tf.abs(gradient)))
