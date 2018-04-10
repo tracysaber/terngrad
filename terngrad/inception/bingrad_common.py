@@ -67,6 +67,7 @@ def encode_to_ternary_gradients(grads_and_vars, get_shape=False):
     gradients, variables = zip(*grads_and_vars)
     ternary_gradients = []
     gradient_shapes = []
+    print(gradients,variables)
     for gradient in gradients:
       if gradient is None:
         ternary_gradients.append(None)
