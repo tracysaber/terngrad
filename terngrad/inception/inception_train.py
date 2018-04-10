@@ -347,7 +347,7 @@ def train(dataset):
             # Calculate the gradients for the batch of data on this ImageNet
             # tower.
             grads = opt.compute_gradients(loss, tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope))
-            print (grads)
+            # print (grads)
             # Keep track of the gradients across all towers.
             tower_grads.append(grads)
             tower_floating_grads.append(grads)
@@ -364,6 +364,8 @@ def train(dataset):
             #  reg_grads = opt.compute_gradients(reg_loss, tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope))
             #  tower_reg_grads.append(reg_grads)
 
+    print(tower_grads)
+    
     if 1 == FLAGS.grad_bits:
       # for grads in tower_grads:
       #   _gradient_summary(grads, 'floating')
