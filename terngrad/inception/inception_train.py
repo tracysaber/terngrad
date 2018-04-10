@@ -347,19 +347,17 @@ def train(dataset):
             # Calculate the gradients for the batch of data on this ImageNet
             # tower.
             grads = opt.compute_gradients(loss, tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope))
-
+            print (grads.get_shape())
             # Keep track of the gradients across all towers.
             tower_grads.append(grads)
             tower_floating_grads.append(grads)
 
             # Calculate the scalers of binary gradients
-            # if 1 == FLAGS.grad_bits:
-            #   # Always calculate scalers whatever clip_factor is.
-            #   # Returns max value when clip_factor==0.0
-            #   scalers = bingrad_common.gradient_binarizing_scalers(grads, FLAGS.clip_factor)
-            #   tower_scalers.append(scalers)
-            scalers = bingrad_common.gradient_binarizing_scalers(grads, FLAGS.clip_factor)
-            tower_scalers.append(scalers)
+            if 1 == FLAGS.grad_bits:
+              # Always calculate scalers whatever clip_factor is.
+              # Returns max value when clip_factor==0.0
+              scalers = bingrad_common.gradient_binarizing_scalers(grads, FLAGS.clip_factor)
+              tower_scalers.append(scalers)
 
             # regularization gradients
             #if FLAGS.weight_decay:
