@@ -173,6 +173,7 @@ py_library(
     ],
     deps = [
         ":bingrad_common",
+        "deep_gradient_com",
         ":image_processing",
         ":inception",
         ":models",
@@ -253,6 +254,7 @@ py_library(
     ],
     deps = [
         ":bingrad_common",
+        "deep_gradient_com",
         ":image_processing",
         ":inception",
         ":models",
@@ -266,6 +268,7 @@ py_library(
     ],
     deps = [
         ":bingrad_common",
+        "deep_gradient_com",
         ":image_processing",
         ":inception",
         ":models",
