@@ -35,7 +35,7 @@ def ternary_decoder(encoded_data, scaler, shape):
 
 shape=[33, 33, 33, 333]
 scaler=0.002
-with tf.device('/gpu:1'):
+with tf.device('/cpu:0'):
   # binary gradient generator
   gradient = tf.random_normal(shape, stddev=0.001, name='a')
   zeros = tf.zeros(shape)
@@ -48,7 +48,7 @@ with tf.device('/gpu:1'):
   # encoder:  -1 0 1
   encoded_a = ternary_encoder(bin_gradient)
 
-with tf.device('/gpu:0'):
+with tf.device('/cpu:0'):
   # decoder
   decoded_a = ternary_decoder(encoded_a, scaler, shape)
  
@@ -58,7 +58,7 @@ config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 config.log_device_placement = True
 #config.allow_soft_placement = True
-with tf.Session(config=config) as sess:
+with tf.Session() as sess:
   for i in range(2000):
     res = sess.run(err)
-    print i, res
+    print( i, res)

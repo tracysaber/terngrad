@@ -20,6 +20,13 @@ py_library(
 )
 
 py_library(
+    name = "deep_gradient_com",
+    srcs = [
+        "deep_gradient_com.py",
+    ],
+)
+
+py_library(
     name = "dataset",
     srcs = [
         "dataset.py",

@@ -31,6 +31,7 @@ from inception import image_processing
 from inception import inception_model as inception
 from inception.slim import slim
 import inception.bingrad_common as bingrad_common
+import inception.deep_gradient_com as deep_com
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -61,7 +62,8 @@ tf.app.flags.DEFINE_string('optimizer', 'momentum',
 
 tf.app.flags.DEFINE_integer('epoch_to_change', -1,
                             """time to change compression""")
-
+tf.app.flags.DEFINE_integer('deep', 1,
+                            """time to change compression""")
 
 # **IMPORTANT**
 # Please note that this learning rate schedule is heavily dependent on the
@@ -312,6 +314,7 @@ def train(dataset):
     # Calculate the gradients for each model tower.
     tower_grads = [] # gradients of cross entropy or total cost for each tower
     tower_floating_grads = []  # gradients of cross entropy or total cost for each tower
+
     tower_batchnorm_updates = []
     tower_scalers = []
     #tower_reg_grads = []
@@ -352,6 +355,9 @@ def train(dataset):
             tower_grads.append(grads)
             tower_floating_grads.append(grads)
 
+
+
+
             # Calculate the scalers of binary gradients
             if 1 == FLAGS.grad_bits:
               # Always calculate scalers whatever clip_factor is.
@@ -365,7 +371,7 @@ def train(dataset):
             #  tower_reg_grads.append(reg_grads)
 
     print(tower_grads)
-    
+
     if 1 == FLAGS.grad_bits:
       # for grads in tower_grads:
       #   _gradient_summary(grads, 'floating')
@@ -384,6 +390,9 @@ def train(dataset):
           with tf.name_scope('binarizer_%d' % (i)) as scope:
             # Clip and binarize gradients
             # and keep track of the gradients across all towers.
+
+            if 1 == FLAGS.deep:
+                tower_grads[i] = deep_com.sparse_update(tower_grads[i],deep_com.init_local_residual(tower_grads[i]))
             if FLAGS.quantize_logits:
               tower_grads[i][:] = bingrad_common.stochastical_binarize_gradients(
                 tower_grads[i][:], mean_scalers[:])
