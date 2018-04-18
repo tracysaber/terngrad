@@ -28,7 +28,7 @@ def sparse_update(grads_and_vars,local_grads_and_vars,comp_rate=FLAGS.comp_rate)
     """Compress gradient to a certain rate"""
     # def quick_topk(grads,)
     def partition(seq):
-        pi, seq = seq[0], seq[1:]  # 选取并移除主元
+        pi, seq = seq[0], seq[1:]
         lo = [x for x in seq if x <= pi]
         hi = [x for x in seq if x > pi]
         return lo, pi, hi
