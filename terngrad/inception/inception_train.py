@@ -393,7 +393,7 @@ def train(dataset):
             # and keep track of the gradients across all towers.
 
             if 1 == FLAGS.deep:
-                tower_grads[i] = deep_com.sparse_update(tower_grads[i],deep_com.init_local_residual(tower_grads[i]))
+                tower_grads[i] = deep_com.sparse_update(tower_grads[i],deep_com.init_local_residual(tower_grads[i]),FLAGS.comp_rate)
             if FLAGS.quantize_logits:
               tower_grads[i][:] = bingrad_common.stochastical_binarize_gradients(
                 tower_grads[i][:], mean_scalers[:])
