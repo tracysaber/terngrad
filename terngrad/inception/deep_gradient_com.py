@@ -21,8 +21,7 @@ import tensorflow as tf
 import math
 
 FLAGS = tf.app.flags.FLAGS
-tf.app.flags.DEFINE_float('comp_rate',0.999,
-                            """Rate of compression to apply.""")
+
 
 def sparse_update(grads_and_vars,local_grads_and_vars,comp_rate=FLAGS.comp_rate):
     """Compress gradient to a certain rate"""
