@@ -23,7 +23,7 @@ import math
 FLAGS = tf.app.flags.FLAGS
 
 
-def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=FLAGS.comp_rate):
+def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=0.999):
     """Compress gradient to a certain rate"""
     # def quick_topk(grads,)
     def partition(seq):
