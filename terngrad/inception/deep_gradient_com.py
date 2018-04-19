@@ -23,7 +23,7 @@ import math
 FLAGS = tf.app.flags.FLAGS
 
 
-def sparse_update(grads_and_vars,local_grads_and_vars,comp_rate=FLAGS.comp_rate):
+def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=FLAGS.comp_rate):
     """Compress gradient to a certain rate"""
     # def quick_topk(grads,)
     def partition(seq):
@@ -53,7 +53,7 @@ def sparse_update(grads_and_vars,local_grads_and_vars,comp_rate=FLAGS.comp_rate)
         for i in range(1,sample_size):
             sample_grads = tf.concat([sample_grads,tf.reshape(gradients[i],[-1])],0)
             #sample_grads.append(tf.reshape(gradients[i],[-1]))
-        temp_threshold = select(sample_grads, math.floor(comp_rate * sample_size))
+        temp_threshold = select(sample_grads, math.floor(compression_rate * sample_size))
         for i in range(0,len(gradients)):
             shape = gradients[i].shape
             temp_grads = tf.reshape(gradients[i],[-1])
