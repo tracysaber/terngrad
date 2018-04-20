@@ -57,7 +57,7 @@ def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=0.999):
                 sample_grads.append(temp[j])
             #sample_grads = tf.concat([sample_grads,tf.reshape(gradients[i],[-1])],0)
             #sample_grads.append(tf.reshape(gradients[i],[-1]))
-        temp_threshold = select(sample_grads, math.floor(compression_rate * sample_size))
+        temp_threshold = select(sample_grads, int(compression_rate * sample_size*gradients[0].num_elements()))
         for i in range(0,len(gradients)):
             shape = gradients[i].shape
             temp_grads = tf.reshape(gradients[i],[-1])
