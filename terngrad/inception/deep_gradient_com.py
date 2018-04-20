@@ -22,8 +22,27 @@ import math
 
 FLAGS = tf.app.flags.FLAGS
 
-
 def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=0.999):
+    with tf.name_scope('deep_compression'):
+        gradients, variables = zip(*grads_and_vars)
+        local_residuals,local_variables = zip(*local_grads_and_vars)
+        deep_gradients =[]
+        local_grads = []
+        for gradient,local_residual in zip(gradients,local_residuals):
+            g = tf.add(gradient,local_residual)
+            if g is None:
+                deep_gradients.append(None)
+                local_grads.append(None)
+            else:
+                temp_threshold = tf.mul(tf.add(tf.reduce_mean(g), tf.reduce_max(g)), compression_rate*2/3)
+                temp_residual = tf.clip_by_value(g,temp_threshold)
+                local_grads.append(temp_residual)
+                deep_gradients.append(tf.subtract(g,temp_residual))
+    return zip(deep_gradients,variables),zip(local_grads,local_variables)
+
+
+
+def sparse_update_v1(grads_and_vars,local_grads_and_vars,compression_rate=0.999):
     """Compress gradient to a certain rate"""
     # def quick_topk(grads,)
     def partition(seq):
@@ -52,13 +71,15 @@ def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=0.999):
 
         sample_size = 0.001 * len(gradients)+2
         sample_grads = []
-        for i in range(1,int(sample_size)):
-            temp = tf.reshape(gradients[i],[-1])
-            for j in range(0,temp.shape.num_elements()):
-                sample_grads.append(temp[j])
+
+        # for i in range(1,int(sample_size)):
+        #     temp = tf.reshape(gradients[i],[-1])
+        #     for j in range(0,temp.shape.num_elements()):
+        #         sample_grads.append(temp[j])
             #sample_grads = tf.concat([sample_grads,tf.reshape(gradients[i],[-1])],0)
             #sample_grads.append(tf.reshape(gradients[i],[-1]))
-        temp_threshold = select(sample_grads, int(compression_rate * sample_size * gradients[0].shape.num_elements()))
+        #temp_threshold = select(sample_grads, int(compression_rate * sample_size * gradients[0].shape.num_elements()))
+        temp_threshold = tf.mul(tf.add(tf.reduce_mean(gradients[0]),tf.reduce_max(gradients[0])),0.666)
         for i in range(0,len(gradients)):
             shape = gradients[i].shape
             temp_grads = tf.reshape(gradients[i],[-1])
