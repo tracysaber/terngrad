@@ -42,6 +42,7 @@ def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=0.999):
     with tf.name_scope('deep_compression'):
         gradients, variables = zip(*grads_and_vars)
         local_residuals,local_variables = zip(*local_grads_and_vars)
+        gradients = list(gradients)
         for i in range(0,len(gradients)):
             gradients[i] = tf.add(gradients[i],local_residuals[i])
         deep_gradients = []
