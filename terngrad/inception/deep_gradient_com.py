@@ -49,7 +49,7 @@ def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=0.999):
         deep_variables = []
         # sample_rate = (1-comp_rate)*10
 
-        sample_size = 0.001 * len(gradients) * gradients[0].shape.num_elements()
+        sample_size = math.floor(0.001 * len(gradients) * gradients[0].shape.num_elements())
         sample_grads = tf.reshape(gradients[0],[-1])
         for i in range(1,sample_size):
             sample_grads = tf.concat([sample_grads,tf.reshape(gradients[i],[-1])],0)
