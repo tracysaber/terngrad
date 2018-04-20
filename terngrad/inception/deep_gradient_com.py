@@ -33,6 +33,7 @@ def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=0.999):
         return lo, pi, hi
 
     def select(seq, k):
+        print(seq)
         lo, pi, hi = partition(seq)
         m = len(lo)
         if m == k: return pi
