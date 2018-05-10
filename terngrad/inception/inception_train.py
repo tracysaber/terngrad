@@ -393,6 +393,7 @@ def train(dataset):
             # and keep track of the gradients across all towers.
 
             if 1 == FLAGS.deep:
+                #tower_grads[i],local_res = deep_com.sparse_update(tower_grads[i],deep_com.init_local_residual(tower_grads[i]),FLAGS.comp_rate)
                 tower_grads[i],local_res = deep_com.sparse_update(tower_grads[i],deep_com.init_local_residual(tower_grads[i]),FLAGS.comp_rate)
             if FLAGS.quantize_logits:
               tower_grads[i][:] = bingrad_common.stochastical_binarize_gradients(
@@ -565,10 +566,11 @@ def train(dataset):
         graph=tf.get_default_graph())
 
     for step in range(trained_step, FLAGS.max_steps):
+      total_time= 0
       start_time = time.time()
       _, entropy_loss_value, reg_loss_value = sess.run([train_op, entropy_loss, reg_loss])
       duration = time.time() - start_time
-
+      total_time += duration
       assert not np.isnan(entropy_loss_value), 'Model diverged with entropy_loss = NaN'
 
       if step % 10 == 0:
@@ -585,5 +587,6 @@ def train(dataset):
 
       # Save the model checkpoint periodically.
       if step % FLAGS.save_iter == 0 or (step + 1) == FLAGS.max_steps:
+        print('total_time=',total_time)
         checkpoint_path = os.path.join(FLAGS.train_dir, 'model.ckpt')
         saver.save(sess, checkpoint_path, global_step=step)
