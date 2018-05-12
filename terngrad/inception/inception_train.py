@@ -64,7 +64,7 @@ tf.app.flags.DEFINE_integer('epoch_to_change', -1,
                             """time to change compression""")
 tf.app.flags.DEFINE_integer('deep', 1,
                             """time to change compression""")
-tf.app.flags.DEFINE_float('comp_rate',0.999,
+tf.app.flags.DEFINE_float('comp_rate',0.5,
                             """Rate of compression to apply.""")
 # **IMPORTANT**
 # Please note that this learning rate schedule is heavily dependent on the
