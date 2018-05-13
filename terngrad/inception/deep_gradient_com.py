@@ -23,21 +23,24 @@ import math
 FLAGS = tf.app.flags.FLAGS
 
 def sparse_update(grads_and_vars,local_grads_and_vars,compression_rate=0.999):
+#def sparse_update(grads_and_vars,compression_rate=0.999):
     with tf.name_scope('deep_compression'):
         gradients, variables = zip(*grads_and_vars)
         local_residuals,local_variables = zip(*local_grads_and_vars)
         deep_gradients =[]
         local_grads = []
         for gradient,local_residual in zip(gradients,local_residuals):
-            g = tf.add(gradient,local_residual)
+            #g = tf.add(gradient,local_residual)
+            g = gradient
             if g is None:
                 deep_gradients.append(None)
                 local_grads.append(None)
             else:
+                deep_gradients.append(g)
                 temp_threshold = tf.multiply(tf.add(tf.reduce_mean(g), tf.reduce_max(g)), compression_rate*2/3)
                 temp_residual = tf.clip_by_value(g,temp_threshold,-temp_threshold)
                 local_grads.append(temp_residual)
-                deep_gradients.append(tf.subtract(g,temp_residual))
+                #deep_gradients.append(tf.subtract(g,temp_residual))
     return zip(deep_gradients,variables),zip(local_grads,local_variables)
 
 
